@@ -1,7 +1,10 @@
 # WarrantyClarity AI – Intelligent Product Photo Restoration and Enhancement System
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AP24110011492/WarrantyClarity.AI)
+[![Live Demo on Render](https://img.shields.io/badge/Render-Live%20Demo-brightgreen?style=for-the-badge&logo=render)](https://warrantyclarity-ai-gv9w.onrender.com)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/AP24110011492/WarrantyClarity.AI)
 
+**Live Production URL:** **[https://warrantyclarity-ai-gv9w.onrender.com](https://warrantyclarity-ai-gv9w.onrender.com)**  
+**Swagger API Documentation:** **[https://warrantyclarity-ai-gv9w.onrender.com/docs](https://warrantyclarity-ai-gv9w.onrender.com/docs)**  
 **Academic Capstone Project &bull; B.Tech Computer Science & Engineering**  
 **Specialization Domain:** Digital Image Processing (DIP) & Computer Vision  
 **Target Industry:** Consumer Electronics Warranty Support & Claim Verification  
