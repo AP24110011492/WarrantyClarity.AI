@@ -10,6 +10,7 @@ import numpy as np
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from quality_analyzer import analyze_image_quality
 from image_processor import process_image, PRESETS
@@ -378,3 +379,25 @@ def clear_history():
     """Clears the session history."""
     SESSION_HISTORY.clear()
     return {"message": "Session history cleared successfully"}
+
+# ==============================================================================
+# PRODUCTION STATIC FILES SERVING (FOR RENDER / DOCKER DEPLOYMENTS)
+# ==============================================================================
+
+DIST_DIR = os.path.join(os.path.dirname(BASE_DIR), "frontend", "dist")
+
+if os.path.exists(DIST_DIR):
+    assets_dir = os.path.join(DIST_DIR, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="static-assets")
+
+    @app.get("/{full_path:path}")
+    def serve_frontend_spa(full_path: str):
+        # Do not intercept API paths
+        if full_path.startswith("api") or full_path == "docs" or full_path == "openapi.json":
+            raise HTTPException(status_code=404, detail="Not found")
+        file_path = os.path.join(DIST_DIR, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(DIST_DIR, "index.html"))
+
