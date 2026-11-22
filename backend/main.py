@@ -385,19 +385,31 @@ def clear_history():
 # ==============================================================================
 
 DIST_DIR = os.path.join(os.path.dirname(BASE_DIR), "frontend", "dist")
+if not os.path.exists(DIST_DIR):
+    DIST_DIR = os.path.join(BASE_DIR, "static")
 
 if os.path.exists(DIST_DIR):
     assets_dir = os.path.join(DIST_DIR, "assets")
     if os.path.exists(assets_dir):
         app.mount("/assets", StaticFiles(directory=assets_dir), name="static-assets")
 
+    @app.get("/")
+    def serve_frontend_root():
+        index_file = os.path.join(DIST_DIR, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return {"message": "WarrantyClarity AI Backend is Online. (index.html missing)"}
+
     @app.get("/{full_path:path}")
     def serve_frontend_spa(full_path: str):
-        # Do not intercept API paths
-        if full_path.startswith("api") or full_path == "docs" or full_path == "openapi.json":
+        # Do not intercept API paths or swagger docs
+        if full_path.startswith("api") or full_path in ["docs", "openapi.json", "redoc"]:
             raise HTTPException(status_code=404, detail="Not found")
         file_path = os.path.join(DIST_DIR, full_path)
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
-        return FileResponse(os.path.join(DIST_DIR, "index.html"))
+        index_file = os.path.join(DIST_DIR, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        raise HTTPException(status_code=404, detail="Frontend index.html not found")
 
